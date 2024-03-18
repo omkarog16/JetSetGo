@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -63,17 +63,22 @@ const SearchResultsScreen = ({ route }) => {
     };
 
 
-    const handleCheckboxChange = (airline) => {
+    const handleCheckboxChange = (airline) => { 
         if (checkedItems.includes(airline)) {
             // Uncheck the airline if it's already checked
             setCheckedItems(checkedItems.filter(item => item !== airline));
         } else {
             // Check the airline if it's not already checked
-            setCheckedItems([...checkedItems, airline]);;
+            setCheckedItems([...checkedItems, airline]);
+            checkedItems.push(airline)
         }
-        const filteredFlights = allData.filter(flight => checkedItems.includes(flight.airline));
-        setSearchResults(filteredFlights);
     };
+
+    const CheckData =  useMemo(()=>{
+        const filteredFlights = allData.filter(flight => checkedItems.includes(flight.airline));
+        console.log("filteredFlights", checkedItems);
+        setSearchResults(filteredFlights);
+    }, [checkedItems])
 
     /* NOTE**** For Sort anc Filter i am using all data to show list and functionality is working fine  */
 
